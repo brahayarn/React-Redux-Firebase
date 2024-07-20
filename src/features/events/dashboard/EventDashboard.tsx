@@ -19,13 +19,21 @@ export default function EventDashboard({formOpen, setFormOpen}: Props) {
     setEvents(sampleData);
   }, []);
 
+  function handleAddEvent(event: AppEvent) {
+    setEvents(prevState => {
+      return [...prevState, event];
+    } );
+  }
+
   return (
     <Grid>
         <Grid.Column width={10}>
             <EventList events = {events}/>
         </Grid.Column>
         <Grid.Column width={6}>
-            {formOpen && <EventForm setFormOpen={setFormOpen}/>}
+            {formOpen && <EventForm setFormOpen={setFormOpen}
+            addEvent={handleAddEvent}
+            />}
         </Grid.Column>
     </Grid>
   )

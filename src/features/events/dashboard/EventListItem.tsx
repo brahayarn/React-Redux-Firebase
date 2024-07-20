@@ -13,7 +13,7 @@ export default function EventListItem({event}: Props) {
       <Segment>
         <ItemGroup>
           <Item>
-            <Item.Image size="tiny" circular src={event.hostPhotoURL}/>
+            <Item.Image size="tiny" circular src={event.hostPhotoURL || '/user.png'}/>
             <Item.Content>
               <Item.Header> {event.title}</Item.Header>
               <Item.Description>
@@ -33,7 +33,7 @@ export default function EventListItem({event}: Props) {
 
       <Segment secondary>
         <List horizontal>
-          {event.attendees.map((attendee: any) => (
+        {event.attendees && event.attendees.map((attendee: any) => (
             <EventListAttendee  key = {attendee.id}attendee={attendee}/>
           ))}
         </List>
