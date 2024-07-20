@@ -1,7 +1,12 @@
 import { Item, SegmentGroup, Segment, ItemGroup, Icon, List, Button } from "semantic-ui-react";
 import EventListAttendee from "./EventListAttendee";
+import { AppEvent } from "../../../app/types/event";
 
-export default function EventListItem({event}: any) {
+type Props = {
+  event: AppEvent
+}
+
+export default function EventListItem({event}: Props) {
   return (
     <SegmentGroup>
 
