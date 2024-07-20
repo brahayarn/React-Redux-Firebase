@@ -1,10 +1,16 @@
-function App() {
+import { Container } from 'semantic-ui-react';
+import EventDashboard from '../../features/events/dashboard/EventDashboard';
+import Navbar from './nav/Navbar';
 
+function App() {
   return (
     <>
-      <h1>hz rext</h1>
+      <Navbar />
+      <Container className='main'>
+        <EventDashboard />
+      </Container>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
