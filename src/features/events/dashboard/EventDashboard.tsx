@@ -9,7 +9,7 @@ import { AppEvent } from '../../../app/types/event';
 type Props = {
     formOpen: boolean;
     setFormOpen: (value: boolean) => void;
-    selectEvent: (event: AppEvent) => void;
+    selectEvent: (event: AppEvent | null ) => void;
     selectedEvent: AppEvent | null;
 }
 
@@ -27,6 +27,11 @@ export default function EventDashboard({formOpen, setFormOpen, selectEvent, sele
       return [...prevState, event];
     } );
   }
+  function updateEvent (updatedEvent: AppEvent) {
+    setEvents(events.map(evt => evt.id === updatedEvent.id ? updatedEvent : evt))
+    selectEvent(null);
+    setFormOpen(false);
+  }
 
 
   return (
@@ -40,6 +45,7 @@ export default function EventDashboard({formOpen, setFormOpen, selectEvent, sele
             {formOpen && 
             <EventForm 
             setFormOpen={setFormOpen}
+            updateEvent={updateEvent}
             addEvent={handleAddEvent}
             selectedEvent={selectedEvent}
             key={selectedEvent ? selectedEvent.id : 'create'}

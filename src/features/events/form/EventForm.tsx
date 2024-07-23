@@ -7,10 +7,11 @@ type Props = {
     setFormOpen: (value: boolean) => void;
     addEvent: (event: any) => void;
     selectedEvent: AppEvent | null;
+    updateEvent: (event: AppEvent) => void;
 
 }
 
-export default function EventForm({setFormOpen, addEvent, selectedEvent}: Props) {
+export default function EventForm({setFormOpen, addEvent, selectedEvent, updateEvent}: Props) {
     const initialValues = selectedEvent ?? {
         title: '',
         category: '',
@@ -26,12 +27,13 @@ export default function EventForm({setFormOpen, addEvent, selectedEvent}: Props)
         setValues({...values, [name]: value});
     }
     function handleFormSubmit() {
-        addEvent({...values, id: createId, hostedBy: 'Bob', hostPhotoURL: '', attendees: []});
+        selectedEvent ? updateEvent({...selectedEvent, ...values}) 
+        : addEvent({...values, id: createId, hostedBy: 'Bob', hostPhotoURL: '', attendees: []});
         setFormOpen(false);
     }
   return (
     <Segment clearing>
-       <Header content="Event Title"/> 
+       <Header content={selectedEvent ? 'Update event' : 'Create Event'}/> 
        <Form onSubmit={handleFormSubmit}>
             <Form.Field>
                 <input type="text" 
