@@ -1,8 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "../layout/App";
 import EventDashboard from "../../features/events/dashboard/EventDashboard";
-import EventDetailPage from "../../features/events/details/EventDetailPage";
 import EventForm from "../../features/events/form/EventForm";
+import EventDetailedPage from "../../features/events/details/EventDetailedPage";
 
 export const router = createBrowserRouter([
     {
@@ -10,7 +10,7 @@ export const router = createBrowserRouter([
         element: <App />,
         children: [
             {path: "/events", element: <EventDashboard />},
-            {path: "/events/:id", element: <EventDetailPage />},
+            {path: "/events/:id", element: <EventDetailedPage />},
             {path: "/manage/:id", element: <EventForm/>},
             {path: "/createEvent", element: <EventForm />},
 
