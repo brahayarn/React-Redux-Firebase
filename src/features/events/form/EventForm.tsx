@@ -6,8 +6,14 @@ import { Controller, FieldValues, useForm } from "react-hook-form";
 import { categoryOptions } from "./categoryOptions";
 import 'react-datepicker/dist/react-datepicker.css';
 import DatePicker from "react-datepicker";
+import { createId } from "@paralleldrive/cuid2";
+import { useAppDispatch } from "../../../app/store/store";
+import { useNavigate } from "react-router-dom";
+import { createEvent, updateEvent } from "../eventSlice";
 
 export default function EventForm() {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -23,12 +29,11 @@ export default function EventForm() {
   );
 
   function handleFormSubmit(data: FieldValues) {
-    console.log(data);
-    // id = id ?? createId();
-    // event
-    //  ? dispatch(updateEvent({...event, ...values}))
-    //  : dispatch(createEvent({...values, id, hostedBy: 'Bob', hostPhotoURL: '', attendees: []}));
-    //     navigate(`/events/${id}`);
+     id = id ?? createId();
+     event
+     ? dispatch(updateEvent({...event, ...data, date: data.date.toString()}))
+      : dispatch(createEvent({...data, id, hostedBy: 'Bob', hostPhotoURL: '', attendees: [], date: data.date.toString()}));
+         navigate(`/events/${id}`);
   }
   return (
     <Segment clearing>
