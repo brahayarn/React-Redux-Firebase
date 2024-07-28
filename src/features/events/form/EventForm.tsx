@@ -4,6 +4,8 @@ import { useParams } from "react-router-dom";
 import { useAppSelector } from "../../../app/store/store";
 import { Controller, FieldValues, useForm } from "react-hook-form";
 import { categoryOptions } from "./categoryOptions";
+import 'react-datepicker/dist/react-datepicker.css';
+import DatePicker from "react-datepicker";
 
 export default function EventForm() {
   const {
@@ -73,13 +75,25 @@ export default function EventForm() {
           {...register("venue", { required: "Venue is required" })}
           error={errors.venue && errors.venue.message}
         />
-        <Form.Input
-          type="date"
-          placeholder="Date"
-          defaultValue={event?.date || ""}
-          {...register("date", { required: "Date is required" })}
-          error={errors.date && errors.date.message}
-        />
+        <Form.Field>
+            <Controller
+            name="date"
+            control={control}
+            rules={{ required: "Date is required" }}
+            defaultValue={event && new Date(event.date) || null} 
+            render={({ field }) => (
+                <DatePicker
+                selected={field.value}
+                onChange={value => setValue('date',value , { shouldValidate: true })}
+                showTimeSelect
+                timeCaption="time"
+                dateFormat="MMMM d, yyyy h:mm aa"
+                placeholderText="Event Date and Time"
+                />
+
+            )}
+            />
+        </Form.Field>
         <Button
           loading={isSubmitting}
           disabled={!isValid}
