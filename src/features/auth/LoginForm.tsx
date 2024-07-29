@@ -3,6 +3,7 @@ import ModalsWrapper from "../../app/common/modals/ModalsWrapper";
 import { FieldValues, useForm } from "react-hook-form";
 import { useAppDispatch } from "../../app/store/store";
 import { closeModal } from "../../app/common/modals/modalSlice";
+import { SignIn } from "./authSlice";
 
 
 
@@ -11,7 +12,7 @@ export default function LoginForm() {
         mode: 'onTouched'
     });
     function onSubmit(data: FieldValues) {
-        console.log(data);
+        dispatch(SignIn(data));
         dispatch(closeModal());
         
     }
