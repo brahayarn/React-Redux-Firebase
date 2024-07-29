@@ -9,6 +9,7 @@ type Props = {
   event: AppEvent
 }
 
+
 export default function EventListItem({event}: Props) {
   const dispatch = useDispatch()
   return (
@@ -37,8 +38,8 @@ export default function EventListItem({event}: Props) {
 
       <Segment secondary>
         <List horizontal>
-        {event.attendees && event.attendees.map((attendee: any) => (
-            <EventListAttendee  key = {attendee.id}attendee={attendee}/>
+        {event.attendees.map(attendee => (
+            <EventListAttendee key={attendee.id} attendee={attendee} />
           ))}
         </List>
       </Segment>

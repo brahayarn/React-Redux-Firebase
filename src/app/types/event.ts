@@ -8,9 +8,9 @@ export type AppEvent = {
     venue: string;
     hostedBy: string;
     hostPhotoURL: string;
-    attendees?: AppAttendee[];
+    attendees: AppAttendee[]; 
 }
-
+{/* attendees?: AppAttendee[];* була помилка в eventlistitem*/}
 export type AppAttendee = {
     id: string;
     name: string;
