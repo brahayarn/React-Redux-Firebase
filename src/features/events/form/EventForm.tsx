@@ -4,86 +4,89 @@ import { useParams } from "react-router-dom";
 import { useAppSelector } from "../../../app/store/store";
 import { Controller, FieldValues, useForm } from "react-hook-form";
 import { categoryOptions } from "./categoryOptions";
-import 'react-datepicker/dist/react-datepicker.css';
+import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 import { useNavigate } from "react-router-dom";
 import { AppEvent } from "../../../app/types/event";
-import { collection, doc, setDoc, Timestamp, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  setDoc,
+  Timestamp,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "../../../app/config/firebase";
+import { toast } from "react-toastify";
 
 export default function EventForm() {
-
   const navigate = useNavigate();
-  
+
   async function updateEvent(data: AppEvent) {
-    if(!event) return;
-    const docRef = doc(db, 'events', event.id);
+    if (!event) return;
+    const docRef = doc(db, "events", event.id);
     await updateDoc(docRef, {
       ...data,
-      date: Timestamp.fromDate(data.date as unknown as Date)
+      date: Timestamp.fromDate(data.date as unknown as Date),
     });
   }
   async function createEvent(data: FieldValues) {
-    const newEventRef = doc(collection(db, 'events')); 
+    const newEventRef = doc(collection(db, "events"));
     await setDoc(newEventRef, {
       ...data,
-      hostedBy: 'Bob',
-      hostPhotoURL: '', 
+      hostedBy: "Bob",
+      hostPhotoURL: "",
       attendees: [],
-      date: Timestamp.fromDate(data.date as unknown as Date)
-  })
-  return newEventRef;
+      date: Timestamp.fromDate(data.date as unknown as Date),
+    });
+    return newEventRef;
   }
 
-  const {
-    register,
-    handleSubmit,
-    control,
-    setValue,
-    formState: { errors, isValid, isSubmitting },
-  } = useForm({
-    mode: "onTouched",
-  });
+  const { register, handleSubmit, control, setValue, formState: { errors, isValid, isSubmitting } } = useForm({
+    mode: 'onTouched'
+});
   const { id } = useParams();
   const event = useAppSelector((state) =>
     state.events.events.find((e) => e.id === id)
   );
 
   async function handleFormSubmit(data: FieldValues) {
-     try {
-      if(event) {
+    try {
+      if (event) {
         await updateEvent({ ...event, ...data });
         navigate(`/events/${event.id}`);
       } else {
         const ref = await createEvent(data);
         navigate(`/events/${ref.id}`);
       }
-     } catch (error) {
-      console.log(error);
-     }
+    } catch (error: any) {
+      toast.error(error.message);
+      console.log(error.message);
+    }
   }
   return (
     <Segment clearing>
       <Header content="Event Details" sub color="teal" />
       <Form onSubmit={handleSubmit(handleFormSubmit)}>
         <Form.Input
-          placeholder="Event Title"
+          placeholder="Event title"
           defaultValue={event?.title || ""}
           {...register("title", { required: true })}
-          error={errors.title && "Event title is required"}
+          error={errors.title && "Title is required"}
         />
         <Controller
           name="category"
           control={control}
           rules={{ required: "Category is required" }}
-          defaultValue={event?.category || ""}
+          defaultValue={event?.category}
           render={({ field }) => (
             <Form.Select
               options={categoryOptions}
               placeholder="Category"
               clearable
               {...field}
-              onChange={(_, d) => setValue("category", d.value, { shouldValidate: true })}
+              onChange={(_, d) =>
+                setValue("category", d.value, { shouldValidate: true })
+              }
               error={errors.category && errors.category.message}
             />
           )}
@@ -108,23 +111,24 @@ export default function EventForm() {
           error={errors.venue && errors.venue.message}
         />
         <Form.Field>
-            <Controller
+          <Controller
             name="date"
             control={control}
             rules={{ required: "Date is required" }}
-            defaultValue={event && new Date(event.date) || null} 
+            defaultValue={(event && new Date(event.date)) || null}
             render={({ field }) => (
-                <DatePicker
+              <DatePicker
                 selected={field.value}
-                onChange={value => setValue('date',value , { shouldValidate: true })}
+                onChange={(value) =>
+                  setValue("date", value, { shouldValidate: true })
+                }
                 showTimeSelect
                 timeCaption="time"
                 dateFormat="MMMM d, yyyy h:mm aa"
                 placeholderText="Event Date and Time"
-                />
-
+              />
             )}
-            />
+          />
         </Form.Field>
         <Button
           loading={isSubmitting}
@@ -138,7 +142,7 @@ export default function EventForm() {
           disabled={isSubmitting}
           as={Link}
           to="/events"
-          type="submit"
+          type="button"
           floated="right"
           content="Cancel"
         />
