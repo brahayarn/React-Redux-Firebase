@@ -45,7 +45,7 @@ export default function EventForm() {
   });
   const { id } = useParams();
   const event = useAppSelector((state) =>
-    state.events.events.find((e) => e.id === id)
+    state.events.data.find((e) => e.id === id)
   );
 
   async function handleFormSubmit(data: FieldValues) {

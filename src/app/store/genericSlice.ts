@@ -1,4 +1,4 @@
-import { ActionCreatorWithOptionalPayload, ActionCreatorWithPayload, ActionCreatorWithPreparedPayload, createSlice, PayloadAction, SliceCaseReducers, ValidateSliceCaseReducers } from "@reduxjs/toolkit"
+import { ActionCreatorWithOptionalPayload, ActionCreatorWithPayload, ActionCreatorWithPreparedPayload, createSlice, PayloadAction, SliceCaseReducers, ValidateSliceCaseReducers, ActionCreatorWithoutPayload } from "@reduxjs/toolkit"
 
 export type GenericState<T> = {
     data: T
@@ -39,7 +39,7 @@ export type GenericState<T> = {
   }
   
   export type GenericActions<T> = {
-    loading: ActionCreatorWithPayload<string>
-    success: ActionCreatorWithPayload<T, string> | ActionCreatorWithPreparedPayload<any,T, string, never, never>
-    error: ActionCreatorWithOptionalPayload<any, string>
-  }
+    loading: ActionCreatorWithoutPayload<string>;
+    success: ActionCreatorWithPayload<T, string> | ActionCreatorWithPreparedPayload<any, T, string, never, never>;
+    error: ActionCreatorWithOptionalPayload<any, string>;
+}
