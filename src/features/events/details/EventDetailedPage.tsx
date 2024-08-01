@@ -1,41 +1,28 @@
+import { useParams } from 'react-router-dom';
+import { useAppSelector } from '../../../app/store/store';
+import { useEffect } from 'react';
+import { useFireStore } from '../../../app/hooks/firestore/useFirestore';
+import { actions } from '../eventSlice';
+import LoadingComponent from '../../../app/layout/LoadingComponent';
 import { Grid } from 'semantic-ui-react';
 import EventDetailedHeader from './EventDetailedHeader';
 import EventDetailedInfo from './EventDetailedInfo';
 import EventDetailedChat from './EventDetailedChat';
 import EventDetailedSidebar from './EventDetailedSidebar';
-import { useParams } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../../app/store/store';
-import { useEffect } from 'react';
-import { doc, onSnapshot } from 'firebase/firestore';
-import { db } from '../../../app/config/firebase';
-import { useState } from 'react';
-import { toast } from 'react-toastify';
-import LoadingComponent from '../../../app/layout/LoadingComponent';
-import { actions } from '../eventSlice';
 
 export default function EventDetailedPage() {
   const {id} = useParams();
   const event = useAppSelector(state => state.events.data.find(e => e.id === id));
-  const dispatch = useAppDispatch()
-  const [loading, setLoading] = useState(true);
+  const status = useAppSelector(state => state.events.status);
+  const {loadDocument} = useFireStore('events')
 
   useEffect(() => {
     if (!id) return;
-    const unsebscribe = onSnapshot(doc(db, 'events', id), {
-      next: doc => {
-        dispatch(actions.success({id: doc.id, ...doc.data()} as any))
-        setLoading(false);
-      },
-      error: error => {
-        console.log(error)
-        toast.error(error.message)
-        setLoading(false);
-      }
-    })
-    return () => unsebscribe();
-  }, [id, dispatch]);
+    loadDocument(id, actions);
 
-  if (loading) return <LoadingComponent />;
+  }, [id, loadDocument]);
+
+  if (status === 'loading') return <LoadingComponent />;
 
 
   if (!event) return <h2>Event not found</h2>;
