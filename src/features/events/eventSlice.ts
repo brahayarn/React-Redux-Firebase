@@ -1,37 +1,47 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { AppEvent } from "../../app/types/event"
-import { Timestamp } from "firebase/firestore"
+import { PayloadAction } from "@reduxjs/toolkit";
+import { AppEvent } from "../../app/types/event";
+import { Timestamp } from "firebase/firestore";
+import { createGenericSlice, GenericState } from "../../app/store/genericSlice";
 
-type State = {
-    events:  AppEvent[]
-}
+
+type State = GenericState<AppEvent[]> & { loading: boolean; error: any };
+
 
 const initialState: State = {
-    events: []
-}
+    loading: false,
+    data: [],
+    error: null,
+    status: 'finished'
+};
 
-export const eventSlice = createSlice({
+
+export const eventSlice = createGenericSlice({
     name: 'events',
     initialState,
     reducers: {
-        setEvents: {
+        sucess: {
             reducer: (state, action: PayloadAction<AppEvent[]>) => {
-                state.events = action.payload
+                state.data = action.payload;
+                state.status = 'finished';
             },
             prepare: (events: any) => {
-                let eventArray: AppEvent[] = []
-                Array.isArray(events) ? eventArray = events : eventArray.push(events)
+                let eventArray: AppEvent[] = [];
+                if (Array.isArray(events)) {
+                    eventArray = events;
+                } else {
+                    eventArray.push(events);
+                }
                 const mapped = eventArray.map((e: any) => {
                     return {
                         ...e,
-                        date: (e.date as Timestamp).toDate().toISOString()
-                    }
-                })
-                return {payload: mapped}
+                        date: (e.date as Timestamp).toDate().toISOString() 
+                    };
+                });
+                return { payload: mapped };
             }
         }
-       
     }
-})
+});
 
-export const {setEvents } = eventSlice.actions
+
+export const actions = eventSlice.actions;

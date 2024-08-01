@@ -40,10 +40,9 @@ export default function EventForm() {
     });
     return newEventRef;
   }
-
   const { register, handleSubmit, control, setValue, formState: { errors, isValid, isSubmitting } } = useForm({
     mode: 'onTouched'
-});
+  });
   const { id } = useParams();
   const event = useAppSelector((state) =>
     state.events.events.find((e) => e.id === id)
@@ -63,6 +62,7 @@ export default function EventForm() {
       console.log(error.message);
     }
   }
+
   return (
     <Segment clearing>
       <Header content="Event Details" sub color="teal" />

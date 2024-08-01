@@ -13,6 +13,6 @@ export type AppEvent = {
 {/* attendees?: AppAttendee[];* була помилка в eventlistitem*/}
 export type AppAttendee = {
     id: string;
-    name: string;
+    name: string
     photoURL: string;
 }

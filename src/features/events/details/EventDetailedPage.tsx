@@ -8,14 +8,14 @@ import { useAppDispatch, useAppSelector } from '../../../app/store/store';
 import { useEffect } from 'react';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { db } from '../../../app/config/firebase';
-import { setEvents } from '../eventSlice';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import LoadingComponent from '../../../app/layout/LoadingComponent';
+import { actions } from '../eventSlice';
 
 export default function EventDetailedPage() {
   const {id} = useParams();
-  const event = useAppSelector(state => state.events.events.find(e => e.id === id));
+  const event = useAppSelector(state => state.events.data.find(e => e.id === id));
   const dispatch = useAppDispatch()
   const [loading, setLoading] = useState(true);
 
@@ -23,7 +23,7 @@ export default function EventDetailedPage() {
     if (!id) return;
     const unsebscribe = onSnapshot(doc(db, 'events', id), {
       next: doc => {
-        dispatch(setEvents({id: doc.id, ...doc.data()} as any))
+        dispatch(actions.success({id: doc.id, ...doc.data()} as any))
         setLoading(false);
       },
       error: error => {
