@@ -19,7 +19,7 @@ import { actions } from "../eventSlice";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
 
 export default function EventForm() {
-  const {loadDocument, create, update,} = useFireStore('events');
+  const {loadDocument, create, update} = useFireStore('events');
   const navigate = useNavigate();
   const {status} = useAppSelector((state) => state.events);
 
@@ -72,6 +72,16 @@ export default function EventForm() {
   }, [id, loadDocument]);
 
   if(status === 'loading') return <LoadingComponent/>
+  async function handleCancel(event: AppEvent) {
+    try {
+      await update(event.id, { isCancelled: !event.isCancelled });
+      toast.success(`Event ${event.isCancelled ? "un-cancelled" : "cancelled"}`);
+    } catch (error: any) {
+      toast.error(error.message);
+      console.log(error.message);
+      
+    }
+  }
 
   return (
     <Segment clearing>
@@ -140,6 +150,15 @@ export default function EventForm() {
             )}
           />
         </Form.Field>
+        {event && (
+          <Button
+            type="button"
+            floated="left"
+            color={event.isCancelled ? "green" : "red"}
+            content={event.isCancelled ? "Reactivate Event" : "Cancel Event"}
+            onClick={() => handleCancel(event)}
+          />
+        )}
         <Button
           loading={isSubmitting}
           disabled={!isValid}
